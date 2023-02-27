@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: be-users-deployment
+  labels:
+    type: be-users
+spec:
+  template:
+    metadata:
+      name: be-users-pod
+      labels:
+        type: be-users
+    spec:
+      containers:
+        - name: be-users-container
+          image: ghcr.io/sumanthmysore/bootcamp67-be-users
+          imagePullPolicy: Always
+      imagePullSecrets:
+        - name: ghcr-secret
+  replicas: 1
+  selector:
+    matchLabels:
+      type: be-users
+    

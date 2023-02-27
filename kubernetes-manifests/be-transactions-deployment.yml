@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: be-transactions-deployment
+  labels:
+    type: be-transactions
+spec:
+  template:
+    metadata:
+      name: be-transactions-pod
+      labels:
+        type: be-transactions
+    spec:
+      containers:
+        - name: be-transactions-container
+          image: ghcr.io/sumanthmysore/bootcamp67-be-transactions
+          imagePullPolicy: Always
+      imagePullSecrets:
+        - name: ghcr-secret
+  replicas: 1
+  selector:
+    matchLabels:
+      type: be-transactions
+    

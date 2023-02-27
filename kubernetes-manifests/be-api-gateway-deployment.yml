@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: be-api-gateway-deployment
+  labels:
+    type: be-api-gateway
+spec:
+  template:
+    metadata:
+      name: be-api-gateway-pod
+      labels:
+        type: be-api-gateway
+    spec:
+      containers:
+        - name: be-api-gateway-container
+          image: ghcr.io/sumanthmysore/bootcamp67-be-api-gateway
+          imagePullPolicy: Always
+      imagePullSecrets:
+        - name: ghcr-secret
+  replicas: 1
+  selector:
+    matchLabels:
+      type: be-api-gateway
+    

@@ -1,0 +1,41 @@
+server:
+  port: 9004
+
+spring:
+  application:
+    name: USER-SERVICE
+  datasource:
+    url: ${DATASOURCE_URL:jdbc:mysql://3.129.9.179:30036/PocketPay}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:Bootcamp@67}
+    hikari:
+      maximum-pool-size: 10
+  jpa:
+    hibernate.ddl-auto: update
+    generate-ddl: true
+    show-sql: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 987290874219-t9kj38akn5te7i639e3l02n69arcjaov.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - email
+              - profile
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  flyway:
+    baseline-on-migrate: true
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: https://bc67-sr.fe-assignment.tk/eureka/
+  instance:
+    hostname: bc67-sr.fe-assignment.tk

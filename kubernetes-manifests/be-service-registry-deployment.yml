@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: be-service-registry-deployment
+  labels:
+    type: be-service-registry
+spec:
+  template:
+    metadata:
+      name: be-service-registry-pod
+      labels:
+        type: be-service-registry
+    spec:
+      containers:
+        - name: be-service-registry-container
+          image: ghcr.io/sumanthmysore/bootcamp67-be-service-registry
+          imagePullPolicy: Always
+      imagePullSecrets:
+        - name: ghcr-secret
+  replicas: 1
+  selector:
+    matchLabels:
+      type: be-service-registry
+    

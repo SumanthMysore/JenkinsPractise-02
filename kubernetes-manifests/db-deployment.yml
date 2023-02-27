@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: db-deployment
+  labels:
+    type: db
+spec:
+  template: 
+    metadata:
+      name: db-pod
+      labels:
+        type: db
+    spec:
+      containers:
+        - name: db-container
+          image: ghcr.io/sumanthmysore/bootcamp67-database:latest
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: db-secret
+      imagePullSecrets:
+        - name: ghcr-secret
+  replicas: 1
+  selector:
+    matchLabels: 
+      type: db

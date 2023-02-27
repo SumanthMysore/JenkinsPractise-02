@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: be-businessdetails-deployment
+  labels:
+    type: be-businessdetails
+spec:
+  template:
+    metadata:
+      name: be-businessdetails-pod
+      labels:
+        type: be-businessdetails
+    spec:
+      containers:
+        - name: be-businessdetails-container
+          image: ghcr.io/sumanthmysore/bootcamp67-be-businessdetails
+          imagePullPolicy: Always
+      imagePullSecrets:
+        - name: ghcr-secret
+  replicas: 1
+  selector:
+    matchLabels:
+      type: be-businessdetails
+    

@@ -1,0 +1,52 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: API-GATEWAY
+  datasource:
+    url: ${DATASOURCE_URL:jdbc:jdbc:mysql://3.129.9.179:30036/PocketPay}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:Bootcamp@67}
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedHeaders: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+      routes:
+        - id: BUSINESS-SERVICE
+          uri: lb://BUSINESS-SERVICE
+          predicates:
+            - Path=/api/business/**
+        - id: TRANSACTION-SERVICE
+          uri: lb://TRANSACTION-SERVICE
+          predicates:
+            - Path=/api/transactions/**
+        - id: USER-SERVICE
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/api/users/**
+        - id: ACCOUNTS-SERVICE
+          uri: lb://ACCOUNTS-SERVICE
+          predicates:
+            - Path=/api/accounts/**
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: https://bc67-sr.fe-assignment.tk/eureka/
+  instance:
+    hostname: bc67-sr.fe-assignment.tk

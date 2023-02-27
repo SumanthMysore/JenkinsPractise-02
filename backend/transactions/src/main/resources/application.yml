@@ -1,0 +1,27 @@
+server:
+  port: 9003
+
+spring:
+  application:
+    name: TRANSACTION-SERVICE
+  datasource:
+    url: ${DATASOURCE_URL:jdbc:mysql://3.129.9.179:30036/PocketPay}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:Bootcamp@67}
+    hikari:
+      maximum-pool-size: 10
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  flyway:
+    baseline-on-migrate: true
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: https://bc67-sr.fe-assignment.tk/eureka/
+  instance:
+    hostname: bc67-sr.fe-assignment.tk

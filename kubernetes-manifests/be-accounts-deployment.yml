@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: be-accounts-deployment
+  labels:
+    type: be-accounts
+spec:
+  template:
+    metadata:
+      name: be-accounts-pod
+      labels:
+        type: be-accounts
+    spec:
+      containers:
+        - name: be-accounts-container
+          image: ghcr.io/sumanthmysore/bootcamp67-be-accounts
+          imagePullPolicy: Always
+      imagePullSecrets:
+        - name: ghcr-secret
+  replicas: 1
+  selector:
+    matchLabels:
+      type: be-accounts
+    

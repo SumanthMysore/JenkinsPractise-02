@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fe-deployment
+  labels:
+    type: fe
+spec:
+  template:
+    metadata:
+      name: fe-pod
+      labels:
+        type: fe
+    spec:
+      containers:
+        - name: fe-container
+          image: ghcr.io/sumanthmysore/bootcamp67-fe
+          imagePullPolicy: Always
+      imagePullSecrets:
+        - name: ghcr-secret
+  replicas: 3
+  selector:
+    matchLabels:
+      type: fe
