@@ -42,32 +42,41 @@ pipeline {
                 }
             }
         }
-        stage('Building and pushing docker images for frontend') {
+        stage('Building and pushing docker image for frontend') {
             steps {
                 dir('frontend/') {
-                    sh 'docker build . -t ghcr.io/sumanthmysore/jenkins-bc67-fe'
+                    sh 'docker build . -t ghcr.io/sumanthmysore/jenkins-bc67-fe:${tag}'
                 }
                 withCredentials([gitUsernamePassword(credentialsId: 'ghcr_pat', gitToolName: 'Default')]) {
-                    sh 'docker push ghcr.io/sumanthmysore/jenkins-bc67-fe'
+                    sh 'docker push ghcr.io/sumanthmysore/jenkins-bc67-fe:${tag}'
                 }
+            }
+        }
+        stage('Delete the built docker images') {
+            steps {
+                sh 'docker rmi ghcr.io/sumanthmysore/jenkins-bc67-be-api-gateway:${tag} 2>/dev/null'
+                sh 'docker rmi ghcr.io/sumanthmysore/jenkins-bc67-be-businessdetails:${tag} 2>/dev/null'
+                sh 'docker rmi ghcr.io/sumanthmysore/jenkins-bc67-be-service-registry:${tag} 2>/dev/null'
+                sh 'docker rmi ghcr.io/sumanthmysore/jenkins-bc67-be-transactions:${tag} 2>/dev/null'
+                sh 'docker rmi ghcr.io/sumanthmysore/jenkins-bc67-be-users:${tag} 2>/dev/null'
+                
+                sh 'docker rmi ghcr.io/sumanthmysore/jenkins-bc67-fe:${tag} 2>/dev/null'
             }
         }
         stage('Connect to EKS cluster') {
             steps {
-                sh 'aws eks update-kubeconfig --name jenkins-practise --region us-east-2'
+                sh 'aws eks update-kubeconfig --name jenkins-test --region us-east-2'
             }
         }
         stage('Update the deployments with latest image') {
             steps {
-                withKubeConfig(caCertificate: '', clusterName: 'jenkins-practise', contextName: '', credentialsId: 'ghcr_pat', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
-                    sh 'kubectl set image deployment be-api-gateway-deployment be-api-gateway-container=ghcr.io/sumanthmysore/jenkins-bc67-be-api-gateway:${tag}'
-                    sh 'kubectl set image deployment be-businessdetails-deployment be-businessdetails-container=ghcr.io/sumanthmysore/jenkins-bc67-be-businessdetails:${tag}'
-                    sh 'kubectl set image deployment be-service-registry-deployment be-service-registry-container=ghcr.io/sumanthmysore/jenkins-bc67-be-service-registry:${tag}'
-                    sh 'kubectl set image deployment be-transactions-deployment be-transactions-container=ghcr.io/sumanthmysore/jenkins-bc67-be-transactions:${tag}'
-                    sh 'kubectl set image deployment be-users-deployment be-users-container=ghcr.io/sumanthmysore/jenkins-bc67-be-users:${tag}'
-                    
-                    sh 'kubectl set image deployment fe-deployment fe-container=ghcr.io/sumanthmysore/jenkins-bc67-fe:${tag}'
-                } 
+                sh 'kubectl set image deployment be-api-gateway-deployment be-api-gateway-container=ghcr.io/sumanthmysore/jenkins-bc67-be-api-gateway:${tag}'
+                sh 'kubectl set image deployment be-businessdetails-deployment be-businessdetails-container=ghcr.io/sumanthmysore/jenkins-bc67-be-businessdetails:${tag}'
+                sh 'kubectl set image deployment be-service-registry-deployment be-service-registry-container=ghcr.io/sumanthmysore/jenkins-bc67-be-service-registry:${tag}'
+                sh 'kubectl set image deployment be-transactions-deployment be-transactions-container=ghcr.io/sumanthmysore/jenkins-bc67-be-transactions:${tag}'
+                sh 'kubectl set image deployment be-users-deployment be-users-container=ghcr.io/sumanthmysore/jenkins-bc67-be-users:${tag}'
+            
+                sh 'kubectl set image deployment fe-deployment fe-container=ghcr.io/sumanthmysore/jenkins-bc67-fe:${tag}'
             }
         }
     }
